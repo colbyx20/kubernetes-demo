@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-sit
+  namespace: k8-demo-sit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-sit
+      env: sit
+  template:
+    metadata:
+      labels:
+        app: app-sit
+        env: sit
+    spec:
+      containers:
+      - name: app-sit
+        image: colbyx20/k8-demo:1.0.5
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          failureThreshold: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          failureThreshold: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+      volumes:
+      - name: config
+        configMap:
+          name: sitcf
