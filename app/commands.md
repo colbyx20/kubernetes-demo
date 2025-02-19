@@ -1,4 +1,4 @@
-docker run -p 3000:3000 colbyx20/k8-demo:1
+docker run -p 3000:3000 colbyx20/k8-demo:1.0.5
 
 
 kubectl run load-generator --image=busybox -- sh
